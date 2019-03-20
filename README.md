@@ -1,10 +1,10 @@
 # React-Redux-Flask #
 
-Boilerplate application for a Flask JWT Backend and a React/Redux Front-End with Material UI.
+Simple Web app that allows Users to Tracka and Save CryptoCurrency Prices.
 
 * Python 2.7+ or 3.x
 * Pytest
-* Heroku
+
 * Flask
 * React
 * Redux
