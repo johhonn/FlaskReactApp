@@ -1,6 +1,6 @@
 # React-Redux-Flask #
 
-Simple Web app that allows Users to Tracka and Save CryptoCurrency Prices.
+Simple Web app that allows Users to Track and Save CryptoCurrency Prices.
 
 * Python 2.7+ or 3.x
 * Pytest
