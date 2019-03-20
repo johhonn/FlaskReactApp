@@ -55,9 +55,9 @@ export default class ProtectedView extends React.Component {
         console.log(JSON.stringify(list) +"stringified")
         updateSavedCurrencies(this.props.token,JSON.stringify(list),1)
         this.setState({allCurrencies:list})
-        console.log(list+"original list")
+        console.log(JSON.stringify(list)+"original list")
         this.props.updateCurrencies(list)
-        
+        this.props.getCryptoPrices(list.currencies)
     }
     setCurrencies=()=>{
         this.setState({allCurrencies:this.props.data.tokens,stateset:true},()=>console.log(this.state))
@@ -70,7 +70,7 @@ export default class ProtectedView extends React.Component {
        console.log(this.state)
        console.log(this.props)
        let prices=true
-       let tokenlist=null
+       let tokenlist="null"
        let x=this.state.allCurrencies==null ? 0:this.state.allCurrencies.currencies.length
        if(this.props.loaded){
            x=this.props.data.tokens
@@ -83,30 +83,21 @@ export default class ProtectedView extends React.Component {
             }else{
               x=this.props.data.tokens.currencies.length
             }
-            if(x>1){
-                let ylist=y.join()
-              let  url='https://min-api.cryptocompare.com/data/price?fsym=USD'+ '&tsyms='+ylist
-                axios.get(url)
-                 .then( (response)=> {
-    
-                    console.log(response.data);
-                    tokenlist=(y.map(item=>(
-                        <li>{item} </li>
-                     )))
-                    prices=false
-                    console.log(prices)
-                    })
-                 .catch(function (error) {
-    
-                 console.log(error);
-                 })
+            if(x>1 && this.props.data.pricefetching===false){
+              this.props.getCryptoPrices(y)
                 console.log('rendering')
                 
            
         }
-        
-       console.log(x+"tokens are set")
+        if(this.props.data.pricefetching){
+       console.log(this.props.data+"prices are set")
+        let list=this.props.data.prices
+        tokenlist=(Object.keys(list).map((key, index)=> {
+          return (<li>The price of {key} is {1/list[key]}</li>)
+          }));
+          console.log(tokenlist)
        }
+    }
         return (
             <div>
                 {!this.props.loaded
@@ -118,14 +109,15 @@ export default class ProtectedView extends React.Component {
                         <h1>your are following {x} CryptoCurrencies</h1>
                         <input type="text" placeholder="add new currency" onChange={this.handleChange.bind(this,'selectedCurrency')}></input>
                         <button onClick={this.update}>Add Currency</button>
-                        {tokenlist}
+                        
                     </div>
-                }{!this.prices
-
+                }{this.props.data.pricefetching 
+                    ?<div>{tokenlist}</div>
+                    :<div>{tokenlist}</div>
                 }
             </div>
         );
-    }
+      }
 }
 
 ProtectedView.propTypes = {

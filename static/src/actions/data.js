@@ -1,8 +1,8 @@
-import { FETCH_PROTECTED_DATA_REQUEST, RECEIVE_PROTECTED_DATA,ADD_CURRENCY } from '../constants/index';
+import { FETCH_PROTECTED_DATA_REQUEST, RECEIVE_PROTECTED_DATA,ADD_CURRENCY,GET_PRICES } from '../constants/index';
 import { parseJSON } from '../utils/misc';
 import { data_about_user,updateSavedCurrencies } from '../utils/http_functions';
 import { logoutAndRedirect } from './auth';
-
+import axios from 'axios';
 export function receiveProtectedData(data) {
     return {
         type: RECEIVE_PROTECTED_DATA,
@@ -44,4 +44,32 @@ export function updateCurrencies(data) {
             data,
         },
     };
+}
+export function updatePrices(data) {
+    console.log(data +"sending data")
+    return {
+        type: GET_PRICES,
+        payload: {
+            data,
+        },
+    };
+}
+  
+export function getCryptoPrices(array){
+    return (dispatch) => {
+    array=array.join()
+    console.log(array)
+    let  url='https://min-api.cryptocompare.com/data/price?fsym=USD'+ '&tsyms='+array
+      axios.get(url)
+       .then( (response)=> {
+
+          console.log(response.data);
+          dispatch(updatePrices(response.data));
+          
+          })
+       .catch(function (error) {
+
+       console.log(error);
+       })
+    }
 }
